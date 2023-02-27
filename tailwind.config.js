@@ -9,6 +9,9 @@ module.exports = {
         container: {
             center: true,
             padding: '1rem',
+        },
+        transitionDuration: {
+            DEFAULT: "300ms",
         }
     },
     plugins: [],

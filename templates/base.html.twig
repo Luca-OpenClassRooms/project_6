@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnowTricks - {% block title %}{% endblock %}</title>
 
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
@@ -15,14 +16,67 @@
 </head>
 <body>
     <header>
-        <nav>
-            <div class="container mx-auto py-5">
+        <nav class="hidden sm:block fixed top-0 z-50 bg-white w-full">
+            <div class="container mx-auto py-5 flex items-center justify-between gap-8">
                 <a href="{{ path('home') }}">
-                    <img src="/images/logo.svg" alt="" class="w-32">
+                    <img src="/images/logo.svg" alt="" class="w-28">
                 </a>
+
+                <ul class="flex items-center gap-7 text-sm">
+                    <li>
+                        <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Accueil</a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Tricks</a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Connexion</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Inscription</a>
+                    </li>
+                </ul>
             </div>
         </nav>
+
+        <nav class="sm:hidden fixed bottom-0 w-full z-50 bg-white border-t border-slate-200">
+            <ul class="container flex items-center justify-between gap-3 py-6">
+                <li class="flex items-center justify-center flex-1">
+                    <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                        </svg>
+                    </a>
+                </li>
+
+                <li class="flex items-center justify-center flex-1">
+                    <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                        </svg>
+                    </a>
+                </li>
+           
+                <li class="flex items-center justify-center flex-1">
+                    <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                        </svg>
+                    </a>   
+                </li>
+            </ul>
+        </nav>
     </header>
+
     {% block body %}{% endblock %}
+
+    <footer class="bg-white border-t border-slate-200 py-6">
+        <div class="container text-sm">
+            <p>Copyright &copy; 2023 - SnowTricks</p>
+        </div>
+    </footer>
 </body>
 </html>
