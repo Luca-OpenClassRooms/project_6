@@ -23,7 +23,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-10">
             {% for trick in 0..14 %}
             <div class="col-span-1">
-                <div class="bg-white rounded-md border border-slate-200 overflow-hidden">
+                <a href="#" class="block bg-white rounded-md border border-slate-200 overflow-hidden transition-opacity hover:opacity-70">
                     <div class="bg-cover bg-center h-48" style="background-image: url('https://user.oc-static.com/upload/2016/11/17/14793747168201_snowboard_neige_figure_saut_shutterstock_3516624621.jpg')"></div>
                     <div class="p-3 flex items-center justify-between gap-3">
                         <h2>Figure {{ trick }}</h2>
@@ -42,7 +42,7 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>                
             {% endfor %}
         </div>
@@ -54,6 +54,9 @@
 
             Chargement des figures...
         </div>
+        {# <button class="bg-white mx-auto w-full max-w-sm rounded-lg text-sm p-5 flex items-center justify-center gap-3 transition hover:opacity-50">
+            Voir plus de figures
+        </button> #}
     </div>
 </section>
 
