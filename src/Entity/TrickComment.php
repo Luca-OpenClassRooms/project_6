@@ -14,11 +14,11 @@ class TrickComment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $trick_id = null;
+    #[ORM\ManyToOne(targetEntity: Trick::class)]
+    private ?Trick $trick = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -31,26 +31,26 @@ class TrickComment
         return $this->id;
     }
 
-    public function getTrickId(): ?int
+    public function getTrick(): ?int
     {
-        return $this->trick_id;
+        return $this->trick;
     }
 
-    public function setTrickId(int $trick_id): self
+    public function setTrick(Trick $trick): self
     {
-        $this->trick_id = $trick_id;
+        $this->trick = $trick;
 
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUser(): ?int
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(int $user_id): self
+    public function setUser(User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }

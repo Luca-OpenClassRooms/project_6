@@ -14,12 +14,6 @@ class Trick
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
-
-    #[ORM\Column]
-    private ?int $category_id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -38,10 +32,10 @@ class Trick
     #[ORM\Column]
     private ?bool $featured = null;
 
-    #[ORM\OneToOne(targetEntity: Category::class)]
+    #[ORM\ManyToOne(targetEntity: Category::class)]
     private ?Category $category;
 
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user;
 
     public function getUser(): ?User
@@ -71,30 +65,6 @@ class Trick
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): self
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getCategoryId(): ?int
-    {
-        return $this->category_id;
-    }
-
-    public function setCategoryId(int $category_id): self
-    {
-        $this->category_id = $category_id;
-
-        return $this;
     }
 
     public function getName(): ?string
