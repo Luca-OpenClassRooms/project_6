@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<section class="my-32">
+    <div class="container">
+        <div class="max-w-3xl mx-auto flex flex-col items-center justify-center gap-5">
+            <h1 class="text-xl md:text-3xl font-semibold">Connexion</h1>
+
+            <div class="bg-white p-8 border rounded-xl w-full">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {{ form_start(form, {
+                    attr: {
+                        class: 'flex flex-col gap-8'
+                    }
+                }) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.password) }}
+                    <div class="text-sm">
+                        <a href="" class="text-blue-500 transition hover:opacity-70">Forgot Password ?</a>
+                    
+                        <p class="mt-2">
+                            No account ? <a href="{{ path('register') }}" class="text-blue-500 transition hover:opacity-70">Register</a>
+                        </p>
+                    </div>
+                    <input type="hidden" name="_csrf_token"
+                        value="{{ csrf_token('authenticate') }}"
+                    >
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
