@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ForgotPasswordFormType;
 use App\Form\LoginFormType;
 use App\Form\RegisterFormType;
+use App\Form\ResetPasswordFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,6 +83,24 @@ class SecurityController extends AbstractController
         }
 
         return $this->render('auth/register.html.twig', [
+            "form" => $form->createView(),
+        ]);
+    }
+
+    #[Route(path: '/forgot-password', name: 'forgot_password', methods: ['GET', 'POST'])]
+    public function forgotPassword(): Response
+    {
+        $form = $this->createForm(ForgotPasswordFormType::class);
+        return $this->render('auth/forgot_password.html.twig', [
+            "form" => $form->createView(),
+        ]);
+    }
+
+    #[Route(path: '/reset-password/{token}', name: 'reset_password', methods: ['GET', 'POST'])]
+    public function resetPassword(): Response
+    {
+        $form = $this->createForm(ResetPasswordFormType::class);
+        return $this->render('auth/reset_password.html.twig', [
             "form" => $form->createView(),
         ]);
     }

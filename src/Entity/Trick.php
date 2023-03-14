@@ -38,6 +38,18 @@ class Trick
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user;
 
+    #[ORM\PrePersist]
+    public function onPrePersist()
+    {
+        $this->created_at = new \DateTime("now");
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate()
+    {
+        $this->updated_at = new \DateTime("now");
+    }
+
     public function getUser(): ?User
     {
         return $this->user;

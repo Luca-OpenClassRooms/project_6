@@ -30,6 +30,7 @@ function loadTricks() {
 
                 html = html.replace(/{title}/g, trick.name);
                 html = html.replace(/{slug}/g, trick.slug);
+                html = html.replace(/{url}/g, "/tricks/" + trick.slug);
 
                 clone.innerHTML = html;
                 clone.style.display = 'block';

@@ -36,7 +36,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
-    #[ORM\PreUpdate]
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created_at = new \DateTime("now");
