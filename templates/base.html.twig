@@ -24,20 +24,28 @@
 
                 <ul class="flex items-center gap-7 text-sm">
                     <li>
-                        <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Accueil</a>
+                        <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Home</a>
                     </li>
                     
                     <li>
                         <a href="{{ path('home') }}" class="transition text-gray-500 hover:text-gray-900">Tricks</a>
                     </li>
-                    
+
+                    {% if not app.user %}
                     <li>
-                        <a href="{{ path('login') }}" class="transition text-gray-500 hover:text-gray-900">Connexion</a>
+                        <a href="{{ path('login') }}" class="transition text-gray-500 hover:text-gray-900">Login</a>
                     </li>
 
                     <li>
-                        <a href="{{ path('register') }}" class="transition text-gray-500 hover:text-gray-900">Inscription</a>
+                        <a href="{{ path('register') }}" class="transition text-gray-500 hover:text-gray-900">Register</a>
                     </li>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <li>
+                            <a href="{{ path('logout') }}" class="transition text-gray-500 hover:text-gray-900">Logout</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
