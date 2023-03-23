@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block body %}
 <section class="my-32">
@@ -8,10 +8,23 @@
         <div class="max-w-3xl mx-auto flex flex-col items-center justify-center gap-5">
             <h1 class="text-xl md:text-3xl font-semibold">Login</h1>
 
-            <div class="bg-white p-8 border rounded-xl w-full">
+            <div class="bg-white p-8 border rounded-xl w-full flex flex-col gap-5">
                 {% if error %}
-                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    <div class="bg-red-500 rounded-lg text-white p-3">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
+
+                {% for message in app.flashes('error') %}
+                    <div class="bg-red-500 rounded-lg text-white p-3">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('success') %}
+                    <div class="bg-green-500 rounded-lg text-white p-3">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
 
                 {{ form_start(form, {
                     attr: {
@@ -20,6 +33,7 @@
                 }) }}
                     {{ form_row(form.username) }}
                     {{ form_row(form.password) }}
+                    
                     <div class="text-sm">
                         <a href="{{ path('forgot_password') }}" class="text-blue-500 transition hover:opacity-70">Forgot Password ?</a>
                     
@@ -27,6 +41,7 @@
                             No account ? <a href="{{ path('register') }}" class="text-blue-500 transition hover:opacity-70">Register</a>
                         </p>
                     </div>
+
                     <input type="hidden" name="_csrf_token"
                         value="{{ csrf_token('authenticate') }}"
                     >

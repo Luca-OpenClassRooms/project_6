@@ -22,6 +22,12 @@ class PasswordReset
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\PrePersist]
+    public function onPrePersist()
+    {
+        $this->created_at = new \DateTime("now");
+    }
+
     public function getId(): ?int
     {
         return $this->id;

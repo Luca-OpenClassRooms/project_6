@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block body %}
 <section class="my-32">
@@ -8,7 +8,14 @@
         <div class="max-w-3xl mx-auto flex flex-col items-center justify-center gap-5">
             <h1 class="text-xl md:text-3xl font-semibold">Register</h1>
 
-            <div class="bg-white p-8 border rounded-xl w-full">
+
+            <div class="bg-white p-8 border rounded-xl w-full flex flex-col gap-5">
+                {% for message in app.flashes('success') %}
+                    <div class="bg-green-500 rounded-lg text-white p-3">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
                 {{ form_start(form, {
                     attr: {
                         class: 'flex flex-col gap-8'

@@ -38,7 +38,11 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         $request->getSession()->set(Security::LAST_USERNAME, $username);
 
         $badge = new UserBadge($username, function (string $userIdentifier) {
-            return $this->userRepository->findOneBy(['username' => $userIdentifier]);
+            return $this->userRepository->createQueryBuilder("u")
+                ->where("u.username = :username")
+                ->andWhere("u.email_verified_at IS NOT NULL")
+                ->setParameter("username", $userIdentifier)
+                ->getQuery()->getOneOrNullResult();
         });
 
         return new Passport(
