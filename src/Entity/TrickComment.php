@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TrickCommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TrickCommentRepository::class)]
 class TrickComment
@@ -14,12 +15,15 @@ class TrickComment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Trick::class)]
+    #[ORM\ManyToOne(targetEntity: Trick::class, )]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Trick $trick = null;
 
+    #[Groups('trick:comment')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: "EAGER")]
     private ?User $user = null;
 
+    #[Groups('trick:comment')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 

@@ -1,44 +1,63 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% set background = "https://placehold.co/1920x1080" %}
 
 {% block body %}
+
+{% if trick.medias|filter(v => v.type == 'image')|first %}
+    {% set background = '/uploads/tricks/' ~ trick.medias|filter(v => v.type == 'image')|first.content %}
+{% endif %}
+
 <div class="mt-24"></div>
 <section class="w-screen h-96 bg-slate-200 relative p-3 text-center">
-    <div class="bg-hero" style="background-image: url('https://user.oc-static.com/upload/2016/11/17/14793747168201_snowboard_neige_figure_saut_shutterstock_3516624621.jpg')"></div>
+    <div class="bg-hero" style="background-image: url('{{ background }}')"></div>
     <div class="w-full h-full relative z-10 text-white">
         <div class="flex w-full h-full flex-col gap-3 max-w-3xl justify-center items-center mx-auto">
             <h1 class="font-semibold text-2xl md:text-5xl">{{ trick.name }}</h1>
         </div>
 
         <div class="absolute right-5 top-5 flex items-center gap-3">
-            <a href="">
+            <a href="{{ path("app_trick_edit", {"slug": trick.slug}) }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
                 </svg>
             </a>
 
-            <a href="">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-red-500">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                </svg>
-            </a>
+            <form action="{{ path('app_trick_delete', {
+                'slug': trick.slug,
+            })}}" method="POST">
+                <button type="submit" class="flex items-center justify-center">
+                    <input type="hidden" name="_token" value="{{ csrf_token("delete-" ~ trick.id) }}"/>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </button>
+            </form>
         </div>
     </div>
 </section>
 
 <section class="my-10">
     <div class="container flex flex-col gap-10">
-        <div class="flex items-center flex-nowrap overflow-x-auto gap-5 pb-5">
-            {% for item in 0..20 %}
-            <div class="w-[300px] h-[180px] flex-shrink-0">
-                <img src="https://picsum.photos/200/200?t={{ item }}" class="w-full h-full object-cover">
+        {% if trick.medias|length > 0 %}
+            <div class="flex items-center flex-nowrap overflow-x-auto gap-5 pb-5">
+                {% for media in trick.medias %}
+                    <div class="w-[300px] h-[180px] flex-shrink-0">
+                        {% if media.type == 'iframe'  %}
+                            <iframe src="{{ media.content }}" class="w-full h-full" height="100%"></iframe>
+                        {% else %}
+                            <img src="/uploads/tricks/{{ media.content }}" class="w-full h-full object-cover">
+                        {% endif %}
+                    </div>
+                {% endfor %} 
             </div>
-            {% endfor %} 
-        </div>
+        {% endif %}
 
         <div class="flex flex-col gap-5 text-slate-800">
-            {{ trick.description|raw }}
+            {{ trick.description|nl2br }}
         </div>
 
         <div class="flex items-center justify-center gap-5 text-slate-500 flex-wrap">
@@ -78,25 +97,9 @@
             {{ form_end(formComment) }}
         </div>
 
-        {# <form method="POST" class="text-sm flex items-center w-full">
-            <input type="text" class="outline-none border p-3 rounded-l-lg flex-1" placeholder="Ex: mon super commentaire !">
-            <button class="bg-blue-500 px-6 py-1.5 rounded-r-lg text-white place-self-stretch items-stretch">Leave a comment</button>
-        </form> #}
-
         <hr>
 
         <div class="flex flex-col gap-5 max-w-4xl w-full mx-auto">
-            {# {% for comment in comments.data %}
-                <div class="flex gap-5 w-full">
-                    <div class="w-8 h-8 rounded-full overflow-hidden">
-                        <img src="{{ comment.user.avatar }}" alt="" width="32" height="32" class="w-full h-full bg-cover">
-                    </div>
-
-                    <div class="p-5 rounded bg-white w-full text-sm">
-                        <p>{{ comment.content|raw }}</p>
-                    </div>
-                </div>
-            {% endfor %} #}
             <div class="flex flex-col gap-5">
                 <div class="flex gap-5 w-full" style="display: none;" id="comment-template">
                     <div class="w-8 h-8 rounded-full overflow-hidden">

@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
@@ -15,10 +16,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    
     #[ORM\Column(length: 255, unique: true, nullable: false)]
+    #[Groups('user:read')]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('user:read')]
     private ?string $avatar = "https://www.gravatar.com/avatar/0";
 
     #[ORM\Column(length: 255)]

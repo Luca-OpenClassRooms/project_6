@@ -20,8 +20,6 @@ function loadTricks() {
     loading.style.display = 'flex';
     btn.style.display = 'none';
 
-    const parent = template.parentElement;
-
     fetch(`/tricks?limit=${LIMIT}&page=${PAGE}`)
         .then(response => response.json())
         .then(data => {
@@ -32,11 +30,22 @@ function loadTricks() {
                 html = html.replace(/{title}/g, trick.name);
                 html = html.replace(/{slug}/g, trick.slug);
                 html = html.replace(/{url}/g, "/tricks/" + trick.slug);
+                html = html.replace(/{editUrl}/g, "/tricks/" + trick.slug + "/edit");
+
+                let background = trick.medias.find(media => media.type == 'image')
+
+                if( !background ) 
+                    background = 'https://placehold.co/300x300'
+                else
+                    background = '/uploads/tricks/' + background.content;
+
+                html = html.replace(/{background}/g, background);
 
                 clone.innerHTML = html;
                 clone.style.display = 'block';
+
+                const parent = template.parentElement;
                 parent.appendChild(clone);
-                // parent.innerHTML += html;
             });
 
             if( data.data.length < LIMIT ) {

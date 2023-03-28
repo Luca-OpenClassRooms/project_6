@@ -51,6 +51,17 @@ class TrickRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findRandom(): ?Trick
+    {
+        $query = $this->createQueryBuilder('t')
+            ->orderBy('t.id', 'DESC')
+            ->getQuery();
+
+        $query->setMaxResults(1);
+
+        return $query->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */

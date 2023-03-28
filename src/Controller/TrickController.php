@@ -3,9 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Entity\TrickMedia;
 use App\Form\TrickCommentFormType;
+use App\Form\TrickMediaFormType;
+use App\Form\TrickUpdateFormType;
 use App\Repository\TrickCommentRepository;
+use App\Repository\TrickMediaRepository;
 use App\Repository\TrickRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +35,8 @@ class TrickController extends AbstractController
                     "total" => $trickRepository->count([]),
                     "pages" => ceil($trickRepository->count([]) / $request->query->getInt('limit', 3)),
                 ],
+            ], 200, [], [
+                'groups' => ['trick', 'trick:user', 'trick:medias', 'media:read']
             ]
         );
     }
@@ -55,6 +62,8 @@ class TrickController extends AbstractController
                     "total" => $total,
                     "pages" => ceil($total / $request->query->getInt('limit', 3)),
                 ],
+            ], 200, [], [
+                'groups' => ['trick', 'trick:comment', 'user:read']
             ]
         );
     }
@@ -87,10 +96,89 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/{slug}/edit', name: 'app_trick_edit')]
-    public function edit(Trick $trick): Response
+    public function edit(Request $request, Trick $trick, TrickMediaRepository $trickMediaRepository, TrickRepository $trickRepository): Response
     {
+        $formMedia = $this->createForm(TrickMediaFormType::class);
+        $formMedia->handleRequest($request);
+
+        if ($formMedia->isSubmitted() && $formMedia->isValid()) {
+            $media = $formMedia->getData();
+            $media->setTrick($trick);
+
+            if ($media->getType() === 'image') {
+                $file = $formMedia->get('file')->getData();
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                $file->move(
+                    $this->getParameter('images_directory'),
+                    $fileName
+                );
+                $media->setContent($fileName);
+            } else {
+                $media->setContent($formMedia->get('url')->getData());
+            }
+
+            $trickMediaRepository->save($media, true);
+
+            $this->addFlash('success', 'Media added successfully');
+
+            return $this->redirectToRoute('app_trick_edit', [
+                'slug' => $trick->getSlug(),
+            ]);
+        }
+
+        $formUpdate = $this->createForm(TrickUpdateFormType::class, $trick);
+        $formUpdate->handleRequest($request);
+
+        if ($formUpdate->isSubmitted() && $formUpdate->isValid()) {
+            $trick = $formUpdate->getData();
+            $trick->setUpdatedAt(new \DateTimeImmutable());
+
+            $trickRepository->save($trick, true);
+
+            $this->addFlash('success', 'Trick updated successfully');
+
+            return $this->redirectToRoute('app_trick_edit', [
+                'slug' => $trick->getSlug(),
+            ]);
+        }
+
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
+            'formMedia' => $formMedia->createView(),
+            'formUpdate' => $formUpdate->createView()
         ]);
+    }
+
+    #[Route('/tricks/{slug}/media/{media}/delete', name: 'app_trick_media_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function destroyMedia(Request $request, Trick $trick, TrickMedia $media,  TrickMediaRepository $trickMediaRepository, EntityManagerInterface $m): Response
+    {
+        $media = $trickMediaRepository->findOneBy([
+            'id' => $media->getId(),
+            'trick' => $trick->getId()
+        ]);
+
+        if ($media && $this->isCsrfTokenValid('delete-' . $media->getId(), $request->request->get('_token'))) {
+            $m->remove($media);
+            $m->flush();
+
+            $this->addFlash('success', 'Media deleted successfully');
+        } else {
+            $this->addFlash('error', 'Media not found');
+        }
+
+        return $this->redirectToRoute('app_trick_edit', [
+            'slug' => $trick->getSlug(),
+        ]);
+    }
+
+    #[Route('/tricks/{slug}/delete', name: 'app_trick_delete', methods: ['POST'])]
+    public function destroy(Request $request, Trick $trick, TrickRepository $trickRepository, EntityManagerInterface $m): Response
+    {
+        if ($this->isCsrfTokenValid('delete-' . $trick->getId(), $request->request->get('_token'))) {
+            $m->remove($trick);
+            $m->flush();
+        }
+
+        return $this->redirectToRoute('home');
     }
 }

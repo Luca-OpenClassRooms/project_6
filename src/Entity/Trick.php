@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TrickRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 class Trick
@@ -12,32 +13,44 @@ class Trick
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('trick', 'trick:user')]
     private ?int $id = null;
 
+    #[Groups('trick')]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups('trick')]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
-
+    
+    #[Groups('trick')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[Groups('trick')]
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[Groups('trick')]
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    #[Groups('trick')]
     #[ORM\Column]
     private ?bool $featured = null;
 
+    #[Groups('trick')]
     #[ORM\ManyToOne(targetEntity: Category::class)]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Category $category;
 
+    #[Groups('trick:user')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: "EAGER")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?User $user;
-    
+
+    #[Groups('trick:medias')]
     #[ORM\OneToMany(targetEntity: TrickMedia::class, mappedBy: 'trick', fetch: 'LAZY')]
     private ?\Doctrine\ORM\PersistentCollection $medias;
 
