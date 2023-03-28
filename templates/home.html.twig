@@ -7,7 +7,7 @@
 {% block body %}
 
 {% if trick.medias|filter(v => v.type == 'image')|first %}
-    {% set background = '/uploads/tricks/' ~ trick.medias|filter(v => v.type == 'image')|first.content %}
+    {% set background = trick.medias|filter(v => v.type == 'image')|first.content %}
 {% endif %}
 
 <section class="w-screen h-screen bg-slate-200 relative p-3 text-center">
@@ -27,6 +27,12 @@
 
 <section class="my-10">
     <div class="container">
+        <div class="mb-10">
+            <a href="{{ path('app_trick_create') }}" class="block md:w-fit ml-auto text-center bg-blue-500 px-3 py-2 rounded-lg text-white transition hover:opacity-70">
+                Ajouter une figure
+            </a>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-10" id="tricks">
             <div class="col-span-1" id="trick-template" style="display: none;">
                 <div class="block bg-white rounded-md border border-slate-200 overflow-hidden transition-opacity hover:opacity-70 w-full">

@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Trick;
 use App\Entity\TrickComment;
+use App\Entity\TrickMedia;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -67,16 +68,24 @@ class AppFixtures extends Fixture
         ## Create 10 comments
         $tricks = $manager->getRepository('App\Entity\Trick')->findAll();
 
-        for($i = 0; $i < 50; $i++) {
-            $user = $users[array_rand($users)];
-            $trick = $tricks[array_rand($tricks)];
+        foreach($tricks as $trick) {
+            for($i = 0; $i < 10; $i++) {
+                $comment = new TrickComment();
+                $comment->setUser($users[array_rand($users)]);
+                $comment->setTrick($trick);
+                $comment->setContent($faker->paragraphs($nb = 1, $asText = true));
+                $comment->setCreatedAt(new DateTimeImmutable());
+                $manager->persist($comment);
+            }
 
-            $comment = new TrickComment();
-            $comment->setUser($user);
-            $comment->setTrick($trick);
-            $comment->setContent($faker->paragraphs($nb = 1, $asText = true));
-            $comment->setCreatedAt(new DateTimeImmutable());
-            $manager->persist($comment);
+            for($i = 0; $i < 10; $i++) {
+                $media = new TrickMedia();
+                $media->setTrick($trick);
+                $media->setType('image');
+                $media->setContent($faker->imageUrl($width = 640, $height = 480, 'trick'));
+                $media->setTitle($faker->sentence($nbWords = 6, $variableNbWords = true));
+                $manager->persist($media);
+            }
         }
 
         $manager->flush();

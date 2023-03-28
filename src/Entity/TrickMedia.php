@@ -79,7 +79,7 @@ class TrickMedia
 
     public function getContent(): ?string
     {
-        return $this->content;
+        return str_starts_with($this->content, 'http') ? $this->content : "/uploads/tricks/" . $this->content;
     }
 
     public function setContent(string $content): self

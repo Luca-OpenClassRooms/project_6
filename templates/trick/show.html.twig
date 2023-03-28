@@ -7,7 +7,7 @@
 {% block body %}
 
 {% if trick.medias|filter(v => v.type == 'image')|first %}
-    {% set background = '/uploads/tricks/' ~ trick.medias|filter(v => v.type == 'image')|first.content %}
+    {% set background = trick.medias|filter(v => v.type == 'image')|first.content %}
 {% endif %}
 
 <div class="lg:mt-24"></div>
@@ -51,7 +51,7 @@
                         {% if media.type == 'iframe'  %}
                             <iframe src="{{ media.content }}" class="w-full h-full" height="100%"></iframe>
                         {% else %}
-                            <img src="/uploads/tricks/{{ media.content }}" class="w-full h-full object-cover">
+                            <img src="{{ media.content }}" class="w-full h-full object-cover">
                         {% endif %}
                     </div>
                 {% endfor %} 

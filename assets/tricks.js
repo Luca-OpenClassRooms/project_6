@@ -37,7 +37,7 @@ function loadTricks() {
                 if( !background ) 
                     background = 'https://placehold.co/300x300'
                 else
-                    background = '/uploads/tricks/' + background.content;
+                    background = background.content;
 
                 html = html.replace(/{background}/g, background);
 
