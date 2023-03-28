@@ -14,7 +14,7 @@ Installez les packages composer : ```composer install```
 
 ## Étape 3 
 
-Installez les packages node et build le front : ```yarn install``` puis ```yarn build
+Installez les packages node et build le front : ```yarn install``` puis ```yarn build```
 
 ## ÉTAPE 4 
 
