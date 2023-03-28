@@ -17,7 +17,7 @@ class TrickComment
     #[ORM\ManyToOne(targetEntity: Trick::class)]
     private ?Trick $trick = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: "EAGER")]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -26,12 +26,13 @@ class TrickComment
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTrick(): ?int
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
@@ -43,7 +44,7 @@ class TrickComment
         return $this;
     }
 
-    public function getUser(): ?int
+    public function getUser(): ?User
     {
         return $this->user;
     }

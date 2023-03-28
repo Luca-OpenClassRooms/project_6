@@ -3,7 +3,6 @@ const template = document.querySelector('#trick-template');
 const btn = document.querySelector('#load-more');
 const loading = document.querySelector('#loading');
 const goto = document.querySelector('#goto-tricks');
-const parent = template.parentElement;
 
 let LOADING = false;
 let PAGE = 1;
@@ -20,6 +19,8 @@ function loadTricks() {
 
     loading.style.display = 'flex';
     btn.style.display = 'none';
+
+    const parent = template.parentElement;
 
     fetch(`/tricks?limit=${LIMIT}&page=${PAGE}`)
         .then(response => response.json())

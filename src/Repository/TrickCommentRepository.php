@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Trick;
 use App\Entity\TrickComment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,20 @@ class TrickCommentRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findPaginated(Trick $trick, int $page, int $limit): array
+    {
+        $query = $this->createQueryBuilder('t')
+            ->where('t.trick = :trick')
+            ->orderBy('t.id', 'DESC')
+            ->setParameter('trick', $trick->getId())
+            ->getQuery();
+
+        $query->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        return $query->getResult();
     }
 
 //    /**

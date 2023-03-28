@@ -14,6 +14,9 @@ import './bootstrap';
 // load tricks
 import './tricks';
 
+// load comments
+import './comments';
+
 document.addEventListener('DOMContentLoaded', function() {
     const btnsGoto = document.querySelectorAll('[data-goto]');
 

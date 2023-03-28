@@ -45,15 +45,18 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
+        $users = $manager->getRepository('App\Entity\User')->findAll();
+        $categories = $manager->getRepository('App\Entity\Category')->findAll();
+
         // Create 10 tricks
         for($i = 0; $i < 50; $i++) {
             $trick = new Trick();
-            $trick->setUser($user);
-            $trick->setCategory($category);
+            $trick->setUser($users[array_rand($users)]);
+            $trick->setCategory($categories[array_rand($categories)]);
             $trick->setName("Trick $i");
             $trick->setSlug("trick-$i");
             $trick->setFeatured(false);
-            $trick->setDescription("Description $i");
+            $trick->setDescription($faker->paragraphs($nb = 3, $asText = true));
             $trick->setCreatedAt(new DateTimeImmutable());
             $trick->setUpdatedAt(new DateTimeImmutable());
             $manager->persist($trick);
@@ -61,14 +64,21 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
-        // ## Create 10 comments
-        // for($i = 0; $i < 50; $i++) {
-        //     $comment = new TrickComment();
-        //     $comment->setUser($this->userRepository->find(1));
-        //     $comment->setTrick($trick);
-        //     $comment->setContent("Comment $i");
-        //     $comment->setCreatedAt(new DateTimeImmutable());
-        //     $manager->persist($comment);
-        // }
+        ## Create 10 comments
+        $tricks = $manager->getRepository('App\Entity\Trick')->findAll();
+
+        for($i = 0; $i < 50; $i++) {
+            $user = $users[array_rand($users)];
+            $trick = $tricks[array_rand($tricks)];
+
+            $comment = new TrickComment();
+            $comment->setUser($user);
+            $comment->setTrick($trick);
+            $comment->setContent($faker->paragraphs($nb = 1, $asText = true));
+            $comment->setCreatedAt(new DateTimeImmutable());
+            $manager->persist($comment);
+        }
+
+        $manager->flush();
     }
 }

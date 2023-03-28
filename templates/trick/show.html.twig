@@ -38,40 +38,76 @@
         </div>
 
         <div class="flex flex-col gap-5 text-slate-800">
-            {# {{ trick.description|raw }} #}
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita corporis eveniet, ducimus obcaecati perspiciatis dolores explicabo recusandae maiores veniam perferendis cupiditate ipsam rerum qui aliquam consequatur. Placeat consequatur dolore esse id incidunt dolorum, tempora repellendus cum nisi! Error in eveniet quos quae corrupti dignissimos id, recusandae sint pariatur similique totam vel reiciendis quaerat? Rerum ab accusamus, magni quas amet perferendis fugiat doloremque deleniti, laudantium dolore est unde veritatis velit nam incidunt aliquid quisquam. Unde quod odit laudantium aperiam minima ea reiciendis placeat enim excepturi necessitatibus, iure laborum! Ratione voluptas fugit assumenda veniam! Cupiditate assumenda illum quos veritatis exercitationem iusto iste.</p>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita corporis eveniet, ducimus obcaecati perspiciatis dolores explicabo recusandae maiores veniam perferendis cupiditate ipsam rerum qui aliquam consequatur. Placeat consequatur dolore esse id incidunt dolorum, tempora repellendus cum nisi! Error in eveniet quos quae corrupti dignissimos id, recusandae sint pariatur similique totam vel reiciendis quaerat? Rerum ab accusamus, magni quas amet perferendis fugiat doloremque deleniti, laudantium dolore est unde veritatis velit nam incidunt aliquid quisquam. Unde quod odit laudantium aperiam minima ea reiciendis placeat enim excepturi necessitatibus, iure laborum! Ratione voluptas fugit assumenda veniam! Cupiditate assumenda illum quos veritatis exercitationem iusto iste.</p>
+            {{ trick.description|raw }}
         </div>
 
         <div class="flex items-center justify-center gap-5 text-slate-500 flex-wrap">
-            <p>Date d'ajout : {{ trick.getCreatedAt|date("d/m/Y à H:i") }}</p>
+            <p>Published at : {{ trick.getCreatedAt|date("d/m/Y à H:i") }}</p>
             <div class="w-[1px] place-self-stretch items-stretch bg-slate-200"></div>
-            <p>Dernière mise à jour : {{ trick.getUpdatedAt|date("d/m/Y à H:i") }}</p>
+            <p>Last updated : {{ trick.getUpdatedAt|date("d/m/Y à H:i") }}</p>
             <div class="w-[1px] place-self-stretch items-stretch bg-slate-200"></div>
-            <p>Catégorie : {{ trick.category.name }}</p>
+            <p>Category : {{ trick.category.name }}</p>
         </div>
 
         <hr>
 
-        <form method="POST" class="text-sm flex items-center w-full">
+        <div class="flex flex-col gap-3">
+            {% for message in app.flashes('error') %}
+                <div class="bg-red-500 rounded-lg text-white p-3">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('success') %}
+                <div class="bg-green-500 rounded-lg text-white p-3">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_start(formComment) }}
+                {{ form_row(formComment.content, {
+                    'label': 'Leave a comment',
+                    'attr': {
+                        'placeholder': 'Ex: mon super commentaire !',
+                        'class': 'p-3'
+                    }
+                }) }}
+                <div class="mt-3">
+                    {{ form_row(formComment.submit) }}
+                </div>
+            {{ form_end(formComment) }}
+        </div>
+
+        {# <form method="POST" class="text-sm flex items-center w-full">
             <input type="text" class="outline-none border p-3 rounded-l-lg flex-1" placeholder="Ex: mon super commentaire !">
             <button class="bg-blue-500 px-6 py-1.5 rounded-r-lg text-white place-self-stretch items-stretch">Leave a comment</button>
-        </form>
+        </form> #}
 
         <hr>
 
         <div class="flex flex-col gap-5 max-w-4xl w-full mx-auto">
-            {% for item in 0..5 %}
+            {# {% for comment in comments.data %}
                 <div class="flex gap-5 w-full">
-                    <div>
-                        <img src="https://www.gravatar.com/avatar/0" alt="" width="32" height="32" class="rounded-full">
+                    <div class="w-8 h-8 rounded-full overflow-hidden">
+                        <img src="{{ comment.user.avatar }}" alt="" width="32" height="32" class="w-full h-full bg-cover">
                     </div>
 
                     <div class="p-5 rounded bg-white w-full text-sm">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione, numquam!</p>
+                        <p>{{ comment.content|raw }}</p>
                     </div>
                 </div>
-            {% endfor %}
+            {% endfor %} #}
+            <div class="flex flex-col gap-5">
+                <div class="flex gap-5 w-full" style="display: none;" id="comment-template">
+                    <div class="w-8 h-8 rounded-full overflow-hidden">
+                        <img src="{avatar}" alt="" width="32" height="32" class="w-full h-full bg-cover">
+                    </div>
+
+                    <div class="p-5 rounded bg-white w-full text-sm">
+                        <p>{content}</p>
+                    </div>
+                </div>
+            </div>
 
             <div>
                 <div id="loading" style="display: none;" class="bg-white mx-auto w-full max-w-sm rounded-lg text-sm p-5 flex items-center justify-center gap-3">
@@ -79,11 +115,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                     </svg>
 
-                    Chargement des figures...
+                    Loading tricks...
                 </div>
 
-                <button id="load-more" class="border bg-white mx-auto w-full max-w-sm rounded-lg text-sm p-5 flex items-center justify-center gap-3 transition hover:opacity-50">
-                    Voir plus de figures
+                <button data-slug="{{ trick.slug }}" id="load-more" class="border bg-white mx-auto w-full max-w-sm rounded-lg text-sm p-5 flex items-center justify-center gap-3 transition hover:opacity-50">
+                    Show more
                 </button>
             </div>
         </div>

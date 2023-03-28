@@ -35,8 +35,24 @@ class Trick
     #[ORM\ManyToOne(targetEntity: Category::class)]
     private ?Category $category;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: "EAGER")]
     private ?User $user;
+    
+    #[ORM\OneToMany(targetEntity: TrickMedia::class, mappedBy: 'trick', fetch: 'LAZY')]
+    private ?\Doctrine\ORM\PersistentCollection $medias;
+
+
+    public function getMedias(): ?\Doctrine\ORM\PersistentCollection
+    {
+        return $this->medias;
+    }
+
+    public function setMedias(?\Doctrine\ORM\PersistentCollection $medias): self
+    {
+        $this->medias = $medias;
+
+        return $this;
+    }
 
     #[ORM\PrePersist]
     public function onPrePersist()

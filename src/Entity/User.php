@@ -36,6 +36,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
+    #[ORM\OneToMany(targetEntity: Trick::class, mappedBy: 'user')]
+    private $tricks;
+
     #[ORM\PrePersist]
     public function onPrePersist()
     {

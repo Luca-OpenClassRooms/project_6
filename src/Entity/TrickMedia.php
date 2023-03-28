@@ -26,6 +26,21 @@ class TrickMedia
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\ManyToOne(targetEntity: Trick::class, fetch: 'LAZY')]
+    private ?Trick $trick;
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(Trick $trick): self
+    {
+        $this->trick = $trick;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
