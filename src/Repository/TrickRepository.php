@@ -62,6 +62,16 @@ class TrickRepository extends ServiceEntityRepository
         return $query->getOneOrNullResult();
     }
 
+    public function generateSlug(string $name): string
+    {
+        $slug = strtolower($name);
+        $slug = preg_replace('/[^a-z0-9-]/', '-', $slug);
+        $slug = preg_replace('/-+/', "-", $slug);
+        $slug = trim($slug, '-');
+
+        return $slug;
+    }
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */

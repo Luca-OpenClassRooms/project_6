@@ -17,11 +17,11 @@ class Trick
     private ?int $id = null;
 
     #[Groups('trick')]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
     #[Groups('trick')]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
     
     #[Groups('trick')]

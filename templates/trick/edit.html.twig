@@ -21,7 +21,7 @@
     </div>
 </section>
 
-<section class="my-10">
+<section class="lg:mt-24">
     <div class="container flex flex-col gap-5">
         {% if trick.medias|length > 0 %}
             <div class="flex items-center flex-nowrap overflow-x-auto gap-5 pb-5">
@@ -87,6 +87,7 @@
                 class: 'flex flex-col gap-8'
             }
         }) }}
+            {{ form_row(formUpdate.name) }}
             {{ form_row(formUpdate.category) }}
             {{ form_row(formUpdate.description, {
                 attr: {

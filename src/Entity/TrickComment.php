@@ -28,6 +28,7 @@ class TrickComment
     private ?string $content = null;
 
     #[ORM\Column]
+    #[Groups('trick:comment')]
     private ?\DateTimeImmutable $created_at = null;
 
 

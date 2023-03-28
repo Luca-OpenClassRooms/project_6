@@ -5,7 +5,7 @@ const loading = document.querySelector('#loading');
 
 let LOADING = false;
 let PAGE = 1;
-let LIMIT = 5;
+let LIMIT = 10;
 
 function loadComments() {
     if( LOADING ) 
@@ -31,6 +31,8 @@ function loadComments() {
 
                 html = html.replace(/{content}/g, comment.content);
                 html = html.replace(/{avatar}/g, comment.user.avatar);
+                html = html.replace(/{username}/g, comment.user.username);
+                html = html.replace(/{date}/g, new Date(comment.created_at).toLocaleDateString("fr-FR"));
 
                 clone.innerHTML = html;
                 clone.style.display = 'flex';

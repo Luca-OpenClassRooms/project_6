@@ -6,7 +6,7 @@ use App\Entity\Trick;
 use App\Entity\TrickMedia;
 use App\Form\TrickCommentFormType;
 use App\Form\TrickMediaFormType;
-use App\Form\TrickUpdateFormType;
+use App\Form\TrickStoreFormType;
 use App\Repository\TrickCommentRepository;
 use App\Repository\TrickMediaRepository;
 use App\Repository\TrickRepository;
@@ -18,6 +18,42 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+    #[Route('/tricks/create', name: 'app_trick_create')]
+    public function create(Request $request, TrickRepository $trickRepository, EntityManagerInterface $m)
+    {
+        $form = $this->createForm(TrickStoreFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $trickRepository->generateSlug($form->get('name')->getData());
+            $suffix = 1;
+
+            while($trickRepository->findOneBy(['slug' => $slug])) {
+                $slug = $trickRepository->generateSlug($form->get('name')->getData()) . '-' . $suffix;
+            }
+
+            $trick = $form->getData();
+            $trick->setUser($this->getUser());
+            $trick->setSlug($slug);
+            $trick->setFeatured(false);
+            $trick->setCreatedAt(new \DateTimeImmutable());
+            $trick->setUpdatedAt(new \DateTimeImmutable());
+
+            $m->persist($trick);
+            $m->flush();
+
+            $this->addFlash('success', 'Trick created successfully');
+
+            return $this->redirectToRoute('app_trick_edit', [
+                'slug' => $trick->getSlug(),
+            ]);
+        }
+
+        return $this->render('trick/create.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
     #[Route('/tricks', name: 'app_trick')]
     public function index(TrickRepository $trickRepository, Request $request): Response
     {
@@ -126,7 +162,7 @@ class TrickController extends AbstractController
             ]);
         }
 
-        $formUpdate = $this->createForm(TrickUpdateFormType::class, $trick);
+        $formUpdate = $this->createForm(TrickStoreFormType::class, $trick);
         $formUpdate->handleRequest($request);
 
         if ($formUpdate->isSubmitted() && $formUpdate->isValid()) {
