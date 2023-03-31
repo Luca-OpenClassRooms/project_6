@@ -11,6 +11,7 @@ use App\Repository\TrickCommentRepository;
 use App\Repository\TrickMediaRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrickController extends AbstractController
 {
     #[Route('/tricks/create', name: 'app_trick_create')]
+    #[Security('is_granted("ROLE_USER")')]
     public function create(Request $request, TrickRepository $trickRepository, EntityManagerInterface $m)
     {
         $form = $this->createForm(TrickStoreFormType::class);
@@ -77,6 +79,7 @@ class TrickController extends AbstractController
         );
     }
     #[Route('/tricks/{slug}/comments', name: 'app_trick_comment')]
+    #[Security('is_granted("ROLE_USER")')]
     public function comments(Trick $trick, TrickCommentRepository $trickCommentRepository, Request $request): Response
     {
         $data = $trickCommentRepository->findPaginated(
@@ -132,6 +135,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/{slug}/edit', name: 'app_trick_edit')]
+    #[Security('is_granted("ROLE_USER")')]
     public function edit(Request $request, Trick $trick, TrickMediaRepository $trickMediaRepository, TrickRepository $trickRepository): Response
     {
         $formMedia = $this->createForm(TrickMediaFormType::class);
@@ -186,6 +190,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/{slug}/media/{media}/delete', name: 'app_trick_media_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Security('is_granted("ROLE_USER")')]
     public function destroyMedia(Request $request, Trick $trick, TrickMedia $media,  TrickMediaRepository $trickMediaRepository, EntityManagerInterface $m): Response
     {
         $media = $trickMediaRepository->findOneBy([
@@ -208,6 +213,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/{slug}/delete', name: 'app_trick_delete', methods: ['POST'])]
+    #[Security('is_granted("ROLE_USER")')]
     public function destroy(Request $request, Trick $trick, TrickRepository $trickRepository, EntityManagerInterface $m): Response
     {
         if ($this->isCsrfTokenValid('delete-' . $trick->getId(), $request->request->get('_token'))) {

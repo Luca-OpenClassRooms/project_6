@@ -27,11 +27,13 @@
 
 <section class="my-10">
     <div class="container">
-        <div class="mb-10">
-            <a href="{{ path('app_trick_create') }}" class="block md:w-fit ml-auto text-center bg-blue-500 px-3 py-2 rounded-lg text-white transition hover:opacity-70">
-                Ajouter une figure
-            </a>
-        </div>
+        {% if app.user %}
+            <div class="mb-10">
+                <a href="{{ path('app_trick_create') }}" class="block md:w-fit ml-auto text-center bg-blue-500 px-3 py-2 rounded-lg text-white transition hover:opacity-70">
+                    Ajouter une figure
+                </a>
+            </div>
+        {% endif %}
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mb-10" id="tricks">
             <div class="col-span-1" id="trick-template" style="display: none;">
