@@ -25,12 +25,12 @@ class TrickMediaFormType extends AbstractType
             ->add('title')
             ->add('url', UrlType::class, [
                 'required' => false,
-                "label" => "URL (if iframe)",
+                "label" => "URL ",
                 'mapped' => false,
             ])
             ->add('file', FileType::class, [
                 'required' => false,
-                "label" => "File (if image)",
+                "label" => "File",
                 'mapped' => false,
             ])
             ->add('submit', SubmitType::class, [

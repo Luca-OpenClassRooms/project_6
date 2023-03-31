@@ -10,7 +10,7 @@
     {% set background = trick.medias|filter(v => v.type == 'image')|first.content %}
 {% endif %}
 
-<div class="mt-24"></div>
+<div class="lg:mt-24"></div>
 
 <section class="w-screen h-96 bg-slate-200 relative p-3 text-center">
     <div class="bg-hero" style="background-image: url('{{ background }}')"></div>
@@ -21,7 +21,7 @@
     </div>
 </section>
 
-<section class="lg:mt-24">
+<section class="my-10">
     <div class="container flex flex-col gap-5">
         {% if trick.medias|length > 0 %}
             <div class="flex items-center flex-nowrap overflow-x-auto gap-5 pb-5">

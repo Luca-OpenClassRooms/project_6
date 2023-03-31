@@ -6,6 +6,7 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
+
 import './styles/app.css';
 
 // start the Stimulus application
@@ -30,4 +31,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    const editForm = document.querySelector('form[name="trick_media_form"]');
+
+    console.log(editForm);
+    if( editForm ) {
+        const nodeType = editForm.querySelector('#trick_media_form_type');
+
+        const nodeUrl = editForm.querySelector('#trick_media_form_url');
+        const nodeFile = editForm.querySelector('#trick_media_form_file');
+
+        nodeUrl.parentElement.style.display = 'none';
+
+        nodeType.addEventListener('change', function() {
+            if( nodeType.value === 'iframe' ) {
+                nodeUrl.parentElement.style.display = 'block';
+                nodeFile.parentElement.style.display = 'none';
+            } else {
+                nodeUrl.parentElement.style.display = 'none';
+                nodeFile.parentElement.style.display = 'block';
+            }
+        });
+    }
 });

@@ -14,7 +14,6 @@ function loadTricks() {
 
     LOADING = true;
 
-
     console.log('loading tricks...');
 
     loading.style.display = 'flex';
@@ -45,7 +44,13 @@ function loadTricks() {
                 clone.style.display = 'block';
 
                 const parent = template.parentElement;
-                parent.appendChild(clone);
+                const node = parent.appendChild(clone);
+
+                const ifAuth = node.querySelector('[data-if="isAuth"]');
+
+                if( !window.isAuth ) {
+                    ifAuth.remove();
+                }
             });
 
             if( data.data.length < LIMIT ) {
@@ -87,9 +92,11 @@ window.addEventListener('scroll', function() {
     // }
     // Check if scroll is higher than the tricks section
     
-    if( window.scrollY >= parent.offsetTop ) {
-        goto.style.display = 'block';
-    } else {
-        goto.style.display = 'none';
+    if( goto ) {
+        if( window.scrollY >= parent.offsetTop ) {
+            goto.style.display = 'block';
+        } else {
+            goto.style.display = 'none';
+        }
     }
 });
