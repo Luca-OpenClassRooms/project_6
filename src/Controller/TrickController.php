@@ -79,7 +79,6 @@ class TrickController extends AbstractController
         );
     }
     #[Route('/tricks/{slug}/comments', name: 'app_trick_comment')]
-    #[Security('is_granted("ROLE_USER")')]
     public function comments(Trick $trick, TrickCommentRepository $trickCommentRepository, Request $request): Response
     {
         $data = $trickCommentRepository->findPaginated(
